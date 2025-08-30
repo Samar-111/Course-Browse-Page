@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Course Browse Page</title>
+  <style>
+    /* Reset and base styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Header Styles */
+    .header {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 20px rgba(30, 64, 175, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header__container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header__title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(45deg, #ffffff, #e0e7ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__nav-list {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    .header__nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .header__nav-link:hover,
+    .header__nav-link:focus {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .header__nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: white;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .header__nav-link:hover::after {
+      width: 80%;
+    }
+
+    .header__auth {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .auth-button {
+      padding: 0.6rem 1.2rem;
+      border: 2px solid white;
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .auth-button.login {
+      background: white;
+      color: #1e40af;
+    }
+
+    .auth-button.register:hover {
+      background: white;
+      color: #1e40af;
+    }
+
+    .auth-button.login:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+    }
+
+    /* Search and Filter Styles */
+    .search-filter {
+      margin: 3rem 0 2rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .search-filter__input {
+      flex: 1;
+      min-width: 250px;
+      max-width: 400px;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .search-filter__input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .search-filter__select {
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f8fafc;
+      transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    .search-filter__select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    /* Faculties Section */
+    .faculties {
+      margin: 2rem 0 3rem;
+      text-align: center;
+    }
+
+    .faculties__title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .faculties__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .faculty-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .faculty-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .faculty-card__image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem;
+      border: 4px solid #e0e7ff;
+    }
+
+    .faculty-card__name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .faculty-card__subject {
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .faculty-card__rating {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    /* Courses Grid Styles */
+    .courses {
+      margin-bottom: 3rem;
+    }
+
+    .courses__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Course Card Styles */
+    .course-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      border: 1px solid #f1f5f9;
+    }
+
+    .course-card:hover,
+    .course-card:focus-within {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      outline: none;
+    }
+
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #1e40af);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .course-card:hover::before {
+      opacity: 1;
+    }
+
+    .course-card__image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .course-card:hover .course-card__image {
+      transform: scale(1.05);
+    }
+
+    .course-card__content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .course-card__category {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #3b82f6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(59, 130, 246, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      align-self: flex-start;
+    }
+
+    .course-card__title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      color: #1e293b;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .course-card__description {
+      flex-grow: 1;
+      font-size: 0.95rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .course-card__instructor {
+      font-size: 0.9rem;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .course-card__button {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .course-card__button:hover,
+    .course-card__button:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      outline: none;
+    }
+
+    .course-card__button::after {
+      content: '→';
+      transition: transform 0.3s ease;
+    }
+
+    .course-card__button:hover::after {
+      transform: translateX(4px);
+    }
+
+    /* No results message */
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: #64748b;
+      font-size: 1.1rem;
+      grid-column: 1 / -1;
+    }
+
+    /* Footer Styles */
+    .footer {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: auto;
+    }
+
+    .footer__container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header__container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .header__nav-list {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .header__auth {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .search-filter {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .search-filter__input,
+      .search-filter__select {
+        max-width: 100%;
+        min-width: unset;
+      }
+
+      .faculties__grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .courses__grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .course-card {
+        border-radius: 16px;
+      }
+
+      .faculty-card {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header__title {
+        font-size: 1.5rem;
+      }
+
+      .header__nav-list {
+        gap: 0.75rem;
+      }
+
+      .header__nav-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .auth-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .search-filter {
+        padding: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      .faculties__title {
+        font-size: 1.5rem;
+      }
+
+      .course-card__content {
+        padding: 1.25rem;
+      }
+
+      .course-card__title {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Loading animation for cards */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .course-card,
+    .faculty-card {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .course-card:nth-child(2) { animation-delay: 0.1s; }
+    .course-card:nth-child(3) { animation-delay: 0.2s; }
+    .course-card:nth-child(4) { animation-delay: 0.3s; }
+    .course-card:nth-child(5) { animation-delay: 0.4s; }
+    .course-card:nth-child(6) { animation-delay: 0.5s; }
+
+    /* Focus styles for accessibility */
+    *:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header__container">
+      <h1 class="header__title">LearnHub Academy</h1>
+      <nav class="header__nav" aria-label="Main navigation">
+        <ul class="header__nav-list">
+          <li><a href="#" class="header__nav-link">Home</a></li>
+          <li><a href="#" class="header__nav-link">Courses</a></li>
+          <li><a href="#" class="header__nav-link">About</a></li>
+          <li><a href="#" class="header__nav-link">Contact</a></li>
+          <li class="header__auth">
+            <a href="#" class="auth-button login">Login</a>
+            <a href="#" class="auth-button register">Register</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="search-filter container" aria-label="Search and filter courses">
+      <input
+        type="search"
+        id="searchInput"
+        class="search-filter__input"
+        placeholder="🔍 Search courses..."
+        aria-label="Search courses"
+      />
+      <select id="categoryFilter" class="search-filter__select" aria-label="Filter by category">
+        <option value="all">All Categories</option>
+        <option value="design">🎨 Design</option>
+        <option value="development">💻 Development</option>
+        <option value="marketing">📈 Marketing</option>
+        <option value="business">💼 Business</option>
+      </select>
+    </section>
+
+    <section class="faculties container">
+      <h2 class="faculties__title">Learn from the Top Faculties</h2>
+      <div class="faculties__grid">
+        <div class="faculty-card">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c6f52b9-699e-4516-9759-75cdfde6db9a.png" alt="Professor Sarah Chen - UI/UX Design Expert" class="faculty-card__image">
+          <h3 class="faculty-card__name">Prof. Sarah Chen</h3>
+          <p class="faculty-card__subject">UI/UX Design Expert</p>
+          <p class="faculty-card__rating">⭐ 4.9/5.0</p>
+        </div>
+        <div class="faculty-card">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c6f52b9-699e-4516-9759-75cdfde6db9a.png" alt="Dr. Michael Rodriguez - JavaScript Specialist" class="faculty-card__image">
+          <h3 class="faculty-card__name">Dr. Michael Rodriguez</h3>
+          <p class="faculty-card__subject">JavaScript Specialist</p>
+          <p class="faculty-card__rating">⭐ 4.8/5.0</p>
+        </div>
+        <div class="faculty-card">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c6f52b9-699e-4516-9759-75cdfde6db9a.png" alt="Prof. Emily Watson - Marketing Strategist" class="faculty-card__image">
+          <h3 class="faculty-card__name">Prof. Emily Watson</h3>
+          <p class="faculty-card__subject">Marketing Strategist</p>
+          <p class="faculty-card__rating">⭐ 4.7/5.0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="courses container" aria-label="Course listings">
+      <div id="coursesGrid" class="courses__grid">
+        <!-- Course cards will be inserted here by JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__container">
+      <p>© 2024 LearnHub Academy. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Dummy course data with enhanced content including instructors
+    const courses = [
+      {
+        id: 1,
+        title: "UI/UX Design Masterclass",
+        description: "Learn professional design principles and create stunning user interfaces that delight users and drive engagement.",
+        category: "design",
+        instructor: "Prof. Sarah Chen",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/55b256e4-cd64-40f0-beb7-f33f56a0d38e.png"
+      },
+      {
+        id: 2,
+        title: "JavaScript Fundamentals",
+        description: "Master the building blocks of modern web development with comprehensive JavaScript training from basics to advanced concepts.",
+        category: "development",
+        instructor: "Dr. Michael Rodriguez",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/583b5b14-ce4f-43c9-8001-192aec98c4a2.png"
+      },
+      {
+        id: 3,
+        title: "Digital Marketing Strategy",
+        description: "Develop effective marketing campaigns that drive growth and maximize ROI across digital channels.",
+        category: "marketing",
+        instructor: "Prof. Emily Watson",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d05f8f1e-b2be-44f1-8938-fc28b58241d2.png"
+      },
+      {
+        id: 4,
+        title: "Advanced React Development",
+        description: "Dive deep into React hooks, context API, performance optimization, and state management patterns.",
+        category: "development",
+        instructor: "Dr. Michael Rodriguez",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c0b3422-60ea-4de2-be8c-70e10ef44f13.png"
+      },
+      {
+        id: 5,
+        title: "Business Leadership",
+        description: "Develop strategic thinking and leadership skills to drive organizational success and team excellence.",
+        category: "business",
+        instructor: "Dr. James Wilson",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2cc115e3-f7d2-457c-892c-05199edf3157.png"
+      },
+      {
+        id: 6,
+        title: "Graphic Design Pro",
+        description: "Create professional-grade visual content with advanced design techniques and industry-standard tools.",
+        category: "design",
+        instructor: "Prof. Sarah Chen",
+        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d8129fe2-c178-4903-8f28-50cf3e3dda16.png"
+      }
+    ];
+
+    // DOM Elements
+    const coursesGrid = document.getElementById('coursesGrid');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    // Render courses based on filters
+    function renderCourses() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const selectedCategory = categoryFilter.value;
+
+      // Filter courses
+      const filteredCourses = courses.filter((course) => {
+        const matchesSearch = searchTerm === '' || 
+          course.title.toLowerCase().includes(searchTerm) ||
+          course.description.toLowerCase().includes(searchTerm) ||
+          course.category.toLowerCase().includes(searchTerm) ||
+          course.instructor.toLowerCase().includes(searchTerm);
+        
+        const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
+
+        return matchesSearch && matchesCategory;
+      });
+
+      // Clear current courses
+      coursesGrid.innerHTML = '';
+
+      if (filteredCourses.length === 0) {
+        coursesGrid.innerHTML = `
+          <div class="no-results">
+            <h3>No courses found</h3>
+            <p>Try adjusting your search terms or select a different category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Create course cards with staggered animation
+      filteredCourses.forEach((course, index) => {
+        const card = document.createElement('article');
+        card.className = 'course-card';
+        card.tabIndex = 0;
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.setAttribute('aria-label', `${course.title} course`);
+        card.setAttribute('data-category', course.category);
+
+        card.innerHTML = `
+          <img 
+            src="${course.image}" 
+            alt="${course.title} course cover image with ${course.category} theme" 
+            class="course-card__image" 
+            loading="lazy"
+            onerror="this.src='https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c6f52b9-699e-4516-9759-75cdfde6db9a.png'"
+          />
+          <div class="course-card__content">
+            <span class="course-card__category">${course.category}</span>
+            <h2 class="course-card__title">${course.title}</h2>
+            <p class="course-card__description">${course.description}</p>
+            <p class="course-card__instructor">Instructor: ${course.instructor}</p>
+            <button class="course-card__button" aria-label="Enroll in ${course.title}">
+              Enroll Now
+            </button>
+          </div>
+        `;
+
+        
+        const button = card.querySelector('.course-card__button');
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          alert(`Enrolling in: ${course.title}\nInstructor: ${course.instructor}`);
+        });
+
+       
+        card.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            card.click();
+          }
+        });
+
+        coursesGrid.appendChild(card);
+      });
+    }
+
+    
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    
+    searchInput.addEventListener('input', debounce(renderCourses, 300));
+    categoryFilter.addEventListener('change', renderCourses);
+
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '/') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+   
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCourses();
+      
+      
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+      }, 100);
+    });
+
+   
+    searchInput.addEventListener('focus', () => {
+      searchInput.parentElement.style.transform = 'scale(1.02)';
+    });
+
+    searchInput.addEventListener('blur', () => {
+      searchInput.parentElement.style.transform = 'scale(1)';
+    });
+
+    
+    document.querySelectorAll('.auth-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(`${button.textContent} functionality would be implemented here`);
+      });
+    });
+
+   
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
