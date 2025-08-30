@@ -26,7 +26,7 @@ Open the `course-browse-page.html` file in any modern browser to see the page in
 ## Usage
 
 1. Clone or download this repository.
-2. Open `Course Browse page.html` in your browser.
+2. Open `index.html` in your browser.
 3. Use the search box and category filter to find courses.
 4. Click "Enroll Now" buttons to simulate enrollment (alerts).
 5. Navigate using keyboard tab and Enter/Space keys.
